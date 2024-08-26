@@ -214,7 +214,7 @@ pub fn parse_end_of_line(state: &mut crate::State) {
 		}) => {
 			crate::table::parse_table_end_of_line(state, true);
 		}
-	}
+    }
 }
 
 fn parse_preformatted_end_of_line(state: &mut crate::State) {

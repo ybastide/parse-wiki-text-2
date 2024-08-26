@@ -67,7 +67,8 @@ pub fn parse<'a>(
 
 	crate::line::parse_beginning_of_line(&mut state, None);
 	loop {
-		match state.get_byte(state.scan_position) {
+        let b = state.get_byte(state.scan_position);
+        match b {
 			None => {
 				crate::line::parse_end_of_line(&mut state);
 				if state.scan_position < state.wiki_text.len() {
@@ -142,7 +143,7 @@ pub fn parse<'a>(
 			}
 			Some(b'[') => {
 				if state.get_byte(state.scan_position + 1) == Some(b'[') {
-					crate::link::parse_link_start(&mut state, configuration);
+					crate::link::parse_link_start(&mut state, configuration); // '[[Fichier:OOjs UI icon alert-destructive.svg|20px|link={{{link|}}}|alt=Important}}}|class=noviewer]]' stack: Link target: "Fichier:OOjs UI icon alert-destructive.svg"
 				} else {
 					crate::external_link::parse_external_link_start(
 						&mut state,
@@ -164,7 +165,7 @@ pub fn parse<'a>(
 				Some(crate::OpenNode {
 					nodes,
 					start,
-					type_: crate::OpenNodeType::Link { namespace, target },
+					type_: crate::OpenNodeType::Link { namespace, should_reparse, target },
 				}) => {
 					if state.get_byte(state.scan_position + 1) == Some(b']') {
 						crate::link::parse_link_end(
@@ -174,6 +175,7 @@ pub fn parse<'a>(
 							nodes,
 							namespace,
 							target,
+                            should_reparse,
 						);
 					} else {
 						state.scan_position += 1;
@@ -182,6 +184,7 @@ pub fn parse<'a>(
 							start,
 							type_: crate::OpenNodeType::Link {
 								namespace,
+                                should_reparse,
 								target,
 							},
 						});

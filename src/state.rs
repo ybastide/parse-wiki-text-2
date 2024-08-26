@@ -18,6 +18,7 @@ pub enum OpenNodeType<'a> {
 	},
 	Link {
 		namespace: Option<crate::Namespace>,
+        should_reparse: bool,
 		target: &'a str,
 	},
 	OrderedList {
