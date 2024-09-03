@@ -233,25 +233,23 @@ fn parse_end(
                 if let Ok(reparsed) = reparsed {
                     reparsed.nodes
                 } else { vec![target_text] }
+            } else if trail_end_position > trail_start_position {
+                vec![
+                    target_text,
+                    crate::Node::Text {
+                        end: trail_end_position,
+                        start: trail_start_position,
+                        value: &state.wiki_text
+                            [trail_start_position..trail_end_position],
+                    },
+                ]
             } else {
-                if trail_end_position > trail_start_position {
-                    vec![
-                        target_text,
-                        crate::Node::Text {
-                            end: trail_end_position,
-                            start: trail_start_position,
-                            value: &state.wiki_text
-                                [trail_start_position..trail_end_position],
-                        },
-                    ]
-                } else {
-                    vec![target_text]
-                }
+                vec![target_text]
             };
             state.nodes.push(crate::Node::Link {
                 end: trail_end_position,
                 start: state.scan_position,
-                target: &state.wiki_text
+                target: state.wiki_text
                     [target_start_position..target_end_position]
                     .trim_end(),
                 text,

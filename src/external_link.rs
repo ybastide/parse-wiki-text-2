@@ -41,7 +41,6 @@ pub fn parse_external_link_start(
 	{
 		Err(_) => {
 			state.scan_position = scheme_start_position;
-			return;
 		}
 		Ok(_) => {
 			state.push_open_node(
