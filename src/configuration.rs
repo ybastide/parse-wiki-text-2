@@ -159,7 +159,6 @@ impl crate::Configuration {
 		crate::parse::parse(self, wiki_text, max_duration)
 	}
 	/// Parses wiki text into structured data with a default timeout of 5 seconds.
-	#[must_use]
 	pub fn parse<'a>(
 		&self,
 		wiki_text: &'a str,
@@ -168,7 +167,6 @@ impl crate::Configuration {
 	}
 	/// Parses wiki text into structured data with no time out.
 	/// This function may run for extremely long lengths of time on certain articles
-	#[must_use]
 	pub fn parse_without_timeout<'a>(
 		&self,
 		wiki_text: &'a str,

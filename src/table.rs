@@ -159,9 +159,7 @@ fn change_state(
 				message: crate::WarningMessage::StrayTextInTable,
 				start: table.start,
 			});
-			table
-				.before
-				.append(&mut std::mem::take(&mut state.nodes));
+			table.before.append(&mut std::mem::take(&mut state.nodes));
 		}
 		TableState::CaptionFirstLine | TableState::CaptionRemainder => {
 			table.captions.push(crate::TableCaption {
@@ -650,9 +648,9 @@ pub fn start_table(
 	}
 	state.flushed_position = state.scan_position;
 	let mut position = state.scan_position + 2;
-    while let Some(b'\t') | Some(b' ') = state.get_byte(position) {
-        position += 1;
-    }
+	while let Some(b'\t') | Some(b' ') = state.get_byte(position) {
+		position += 1;
+	}
 	state.push_open_node(
 		crate::OpenNodeType::Table(crate::state::Table {
 			attributes: vec![],

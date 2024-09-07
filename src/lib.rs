@@ -348,8 +348,8 @@ pub enum Node<'a> {
 		/// The text to display for the link.
 		text: Vec<Node<'a>>,
 
-        /// whether the text was reparsed or not (start/end inside are then wrong).
-        reparsed: bool,
+		/// whether the text was reparsed or not (start/end inside are then wrong).
+		reparsed: bool,
 	},
 
 	/// Magic word. Parsed from the code `__`, a valid magic word and `__`.

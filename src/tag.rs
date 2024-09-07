@@ -145,7 +145,9 @@ pub fn parse_start_tag(
 		[tag_name_start_position..]
 		.iter()
 		.cloned()
-		.position(|character| matches!(character, b'\t' | b'\n' | b' ' | b'/' | b'>')) {
+		.position(|character| {
+			matches!(character, b'\t' | b'\n' | b' ' | b'/' | b'>')
+		}) {
 		None => state.wiki_text.len(),
 		Some(position) => tag_name_start_position + position,
 	};

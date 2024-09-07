@@ -4,7 +4,9 @@
 
 pub fn parse_heading_end(state: &mut crate::State) {
 	let mut end_position = state.scan_position;
-    while let Some(b'\t') | Some(b' ') = state.get_byte(end_position - 1) { end_position -= 1; }
+	while let Some(b'\t') | Some(b' ') = state.get_byte(end_position - 1) {
+		end_position -= 1;
+	}
 	let open_node = state.stack.pop().unwrap();
 	if state.get_byte(end_position - 1) != Some(b'=')
 		|| end_position < open_node.start + 3
