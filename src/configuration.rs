@@ -150,7 +150,6 @@ impl crate::Configuration {
     }
 
     /// Parses wiki text into structured data with a user defined timeout.
-    #[must_use]
     pub fn parse_with_timeout<'a>(
         &self,
         wiki_text: &'a str,

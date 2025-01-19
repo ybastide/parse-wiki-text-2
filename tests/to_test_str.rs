@@ -9,7 +9,7 @@ where
     T: ToTestStr,
 {
     fn to_test_str(&self) -> String {
-        let mut s = format!("[");
+        let mut s = "[".to_string();
         for (i, v) in self.iter().enumerate() {
             if i != 0 {
                 s.push_str(", ");
@@ -30,7 +30,7 @@ where
     fn to_test_str(&self) -> String {
         self.as_ref()
             .map(|t| t.to_test_str())
-            .unwrap_or(String::new())
+            .unwrap_or_default()
     }
 }
 

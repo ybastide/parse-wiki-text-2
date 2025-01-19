@@ -3,8 +3,8 @@ pub(crate) fn parse_function(state: &mut crate::state::State) {
     match state.stack.pop() {
         Some(crate::OpenNode {
                  type_: crate::OpenNodeType::Template { name, .. },
-                 nodes,
                  start,
+                 ..
              }) => {
             assert!(name.is_none());
 
@@ -42,7 +42,7 @@ pub(crate) fn parse_function(state: &mut crate::state::State) {
 pub(crate) fn parse_function_parameter_separator(state: &mut crate::state::State) {
     match state.stack.last_mut() {
         Some(crate::OpenNode {
-                 type_: crate::OpenNodeType::Function { name, parameters },
+                 type_: crate::OpenNodeType::Function { parameters, .. },
                  ..
              }) => {
             let position =
