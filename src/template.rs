@@ -76,6 +76,46 @@ pub fn parse_parameter_separator(state: &mut crate::State) {
 pub fn parse_template_end(state: &mut crate::State) {
     match state.stack.last() {
         Some(crate::OpenNode {
+                 type_: crate::OpenNodeType::Function { .. },
+                 ..
+             }) => match state.stack.pop() {
+            Some(crate::OpenNode {
+                     nodes,
+                     start,
+                     type_:
+                     crate::OpenNodeType::Function {
+                         name,
+                         mut parameters,
+                     },
+                 }) => {
+                let position = state.skip_whitespace_backwards(state.scan_position);
+                state.flush(position);
+                state.scan_position += 2;
+                state.flushed_position = state.scan_position;
+                // let name = match name {
+                //     None => std::mem::replace(&mut state.nodes, nodes),
+                //     Some(name) =>
+                {
+                    let parameters_length = parameters.len();
+                    // if parameters_length > 0
+                    {
+                        let parameter = &mut parameters[parameters_length - 1];
+                        parameter.end = position;
+                        parameter.value = std::mem::replace(&mut state.nodes, nodes);
+                    }
+                    // name
+                }
+                // };
+                state.nodes.push(crate::Node::Function {
+                    end: state.scan_position,
+                    name,
+                    parameters,
+                    start,
+                });
+            }
+            _ => unreachable!(),
+        },
+        Some(crate::OpenNode {
             type_: crate::OpenNodeType::Parameter { .. },
             ..
         }) => match state.stack.pop() {
@@ -184,7 +224,7 @@ pub fn parse_template_end(state: &mut crate::State) {
                         // "[...]
                         // | important   = [[Fichier:OOjs UI icon alert-destructive.svg|20px|link={{{link|}}}|alt=Important}}}|class=noviewer]]
                         //                                                                                                 ^^^
-                        println!();
+                        // println!();
                         state.scan_position += 2;
                     }
                     _ => {

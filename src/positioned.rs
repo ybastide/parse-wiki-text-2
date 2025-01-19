@@ -17,13 +17,14 @@ macro_rules! impl_positioned {
 }
 
 impl_positioned!(DefinitionListItem);
+impl_positioned!(FunctionParameter);
 impl_positioned!(ListItem);
 impl_positioned!(Parameter);
 impl_positioned!(TableCaption);
 impl_positioned!(TableCell);
 impl_positioned!(TableRow);
 
-impl<'a> crate::Positioned for crate::Node<'a> {
+impl crate::Positioned for crate::Node<'_> {
     fn end(&self) -> usize {
         match *self {
             crate::Node::Bold { end, .. } => end,
@@ -34,6 +35,7 @@ impl<'a> crate::Positioned for crate::Node<'a> {
             crate::Node::DefinitionList { end, .. } => end,
             crate::Node::EndTag { end, .. } => end,
             crate::Node::ExternalLink { end, .. } => end,
+            crate::Node::Function { end, .. } => end,
             crate::Node::Heading { end, .. } => end,
             crate::Node::HorizontalDivider { end, .. } => end,
             crate::Node::Image { end, .. } => end,
@@ -64,6 +66,7 @@ impl<'a> crate::Positioned for crate::Node<'a> {
             crate::Node::DefinitionList { start, .. } => start,
             crate::Node::EndTag { start, .. } => start,
             crate::Node::ExternalLink { start, .. } => start,
+            crate::Node::Function { start, .. } => start,
             crate::Node::Heading { start, .. } => start,
             crate::Node::HorizontalDivider { start, .. } => start,
             crate::Node::Image { start, .. } => start,

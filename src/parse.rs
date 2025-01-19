@@ -116,6 +116,15 @@ pub fn parse<'a>(
                     state.scan_position += 1;
                 }
             }
+            Some(b':') => match state.stack.last() {
+                Some(crate::OpenNode {
+                         type_: crate::OpenNodeType::Template { parameters, .. },
+                         ..
+                     }) if parameters.is_empty() => {
+                    crate::function::parse_function(&mut state);
+                }
+                _ => state.scan_position += 1,
+            },
             Some(b'<') => match state.get_byte(state.scan_position + 1) {
                 Some(b'!')
                     if state.get_byte(state.scan_position + 2) == Some(b'-')
@@ -198,6 +207,12 @@ pub fn parse<'a>(
                 }
             }
             Some(b'|') => match state.stack.last_mut() {
+                Some(crate::OpenNode {
+                         type_: crate::OpenNodeType::Function { .. },
+                         ..
+                     }) => {
+                    crate::function::parse_function_parameter_separator(&mut state);
+                }
                 Some(crate::OpenNode {
                     type_: crate::OpenNodeType::Parameter { default: None, .. },
                     ..

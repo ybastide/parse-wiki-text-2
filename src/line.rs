@@ -169,6 +169,10 @@ pub fn parse_end_of_line(state: &mut crate::State) {
             crate::heading::parse_heading_end(state);
         }
         Some(crate::OpenNode {
+                 type_: crate::OpenNodeType::Function { .. },
+                 ..
+             })
+        | Some(crate::OpenNode {
             type_: crate::OpenNodeType::Link { .. },
             ..
         })

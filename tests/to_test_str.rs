@@ -1,6 +1,4 @@
-use parse_wiki_text_2::{
-    DefinitionListItem, ListItem, Node, Parameter, TableCaption, TableCell, TableRow, Warning,
-};
+use parse_wiki_text_2::{DefinitionListItem, FunctionParameter, ListItem, Node, Parameter, TableCaption, TableCell, TableRow, Warning};
 
 pub trait ToTestStr {
     fn to_test_str(&self) -> String;
@@ -59,6 +57,11 @@ impl ToTestStr for Node<'_> {
             ExternalLink { nodes, .. } => {
                 format!("ExternalLink({})", nodes.to_test_str())
             }
+            Function { name, parameters, .. } => format!(
+                "Function({}, {})",
+                name.to_test_str(),
+                parameters.to_test_str()
+            ),
             Heading { level, nodes, .. } => {
                 format!("Heading({level}, {})", nodes.to_test_str())
             }
@@ -174,6 +177,15 @@ impl ToTestStr for Parameter<'_> {
         format!(
             "Parameter({}, {})",
             self.name.to_test_str(),
+            self.value.to_test_str()
+        )
+    }
+}
+
+impl ToTestStr for FunctionParameter<'_> {
+    fn to_test_str(&self) -> String {
+        format!(
+            "FunctionParameter({})",
             self.value.to_test_str()
         )
     }

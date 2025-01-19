@@ -114,6 +114,7 @@ mod comment;
 mod configuration;
 mod default;
 mod external_link;
+mod function;
 mod heading;
 mod html_entities;
 mod line;
@@ -178,6 +179,19 @@ pub enum DefinitionListItemType {
 
     /// Parsed from the code `;`.
     Term,
+}
+
+/// Function parameter.
+#[derive(Debug)]
+pub struct FunctionParameter<'a> {
+    /// The byte position in the wiki text where the element ends.
+    pub end: usize,
+
+    /// The byte position in the wiki text where the element starts.
+    pub start: usize,
+
+    /// The value of the parameter.
+    pub value: Vec<Node<'a>>,
 }
 
 /// List item of an ordered list or unordered list.
@@ -281,6 +295,21 @@ pub enum Node<'a> {
 
         /// The content of the element.
         nodes: Vec<Node<'a>>,
+
+        /// The byte position in the wiki text where the element starts.
+        start: usize,
+    },
+
+    /// Function. Parsed from code starting with `{{`, containing a `:`, and ending with `}}`.
+    Function {
+        /// The byte position in the wiki text where the element ends.
+        end: usize,
+
+        /// The name of the function.
+        name: Vec<Node<'a>>,
+
+        /// The parameters of the function.
+        parameters: Vec<FunctionParameter<'a>>,
 
         /// The byte position in the wiki text where the element starts.
         start: usize,

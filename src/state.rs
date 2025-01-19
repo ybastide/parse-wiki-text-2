@@ -13,6 +13,10 @@ pub enum OpenNodeType<'a> {
         items: Vec<crate::DefinitionListItem<'a>>,
     },
     ExternalLink,
+    Function {
+        name: Vec<crate::Node<'a>>,
+        parameters: Vec<crate::FunctionParameter<'a>>,
+    },
     Heading {
         level: u8,
     },
