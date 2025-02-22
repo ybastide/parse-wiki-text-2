@@ -12,5 +12,8 @@ repository = "https://github.com/soerenmeier/parse-wiki-text-2"
 version = "0.1.6-alpha.0"
 rust-version = "1.65"
 
+[lints]
+workspace = true
+
 [dev-dependencies]
 clap = { version = "4.0", features = ["derive"] }
