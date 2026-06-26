@@ -86,6 +86,7 @@ impl crate::Configuration {
             "b",
             "bdi",
             "bdo",
+            "big",
             "blockquote",
             "br",
             "caption",
