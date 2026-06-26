@@ -114,6 +114,18 @@ case: <b>alpha
 node: [StartTag(b), Text(alpha)]
 warn: []
 
+case: </big>
+node: [EndTag(big)]
+warn: []
+
+case: <big>
+node: [StartTag(big)]
+warn: []
+
+case: <big>alpha</big>
+node: [StartTag(big), Text(alpha), EndTag(big)]
+warn: []
+
 case: <br\t>
 node: [StartTag(br)]
 warn: []
