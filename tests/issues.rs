@@ -39,8 +39,10 @@ fn issue_1() {
 // `scan_position` mid-character.
 #[test]
 fn timeout_flush_on_multibyte_char_does_not_panic() {
-    let s = "€".repeat(20000); // 60000 bytes; > 10_000 main-loop iterations
-    let r = Configuration::default().parse_with_timeout(&s, Duration::from_nanos(1));
+    let s = "€".repeat(20000); // 60000 bytes ≫ the 10_000-iteration check interval
+    // 1µs stays above any plausible Instant resolution while the 60 KB input still
+    // trips the timeout many checks before EOF (so the test isn't clock-flaky).
+    let r = Configuration::default().parse_with_timeout(&s, Duration::from_micros(1));
     match r {
         Err(ParseError::TimedOut { .. }) => {} // graceful, no panic
         _ => panic!("expected timeout"),
