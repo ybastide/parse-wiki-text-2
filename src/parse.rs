@@ -248,7 +248,19 @@ pub fn parse<'a>(
         if !max_duration.is_zero() && loop_counter == 10_000 {
             loop_counter = 0;
             if start_time.elapsed() > max_duration {
-                state.flush(state.scan_position);
+                // The timeout can fire anywhere, including while the plain-text arm
+                // is walking the bytes of a multi-byte character (it advances one
+                // byte at a time), so `scan_position` may be mid-character. Flushing
+                // there slices the text node on a non-char-boundary and panics. Snap
+                // back to the previous char boundary (never below `flushed_position`,
+                // which is always a boundary) before flushing the truncated output.
+                let mut end_position = state.scan_position;
+                while end_position > state.flushed_position
+                    && !wiki_text.is_char_boundary(end_position)
+                {
+                    end_position -= 1;
+                }
+                state.flush(end_position);
 
                 return Err(ParseError::TimedOut {
                     execution_time: start_time.elapsed(),

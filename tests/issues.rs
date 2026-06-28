@@ -30,3 +30,19 @@ fn issue_1() {
         _ => panic!("expected timeout"),
     }
 }
+
+// A timeout firing while the plain-text arm walked the bytes of a multi-byte
+// character flushed a text node on a non-char-boundary `scan_position` and
+// panicked ("byte index N is not a char boundary"). The timeout flush now snaps
+// back to a char boundary first. Repro: a long run of multi-byte characters with
+// a near-zero timeout, so the timeout fires (at loop_counter == 10_000) with
+// `scan_position` mid-character.
+#[test]
+fn timeout_flush_on_multibyte_char_does_not_panic() {
+    let s = "€".repeat(20000); // 60000 bytes; > 10_000 main-loop iterations
+    let r = Configuration::default().parse_with_timeout(&s, Duration::from_nanos(1));
+    match r {
+        Err(ParseError::TimedOut { .. }) => {} // graceful, no panic
+        _ => panic!("expected timeout"),
+    }
+}
